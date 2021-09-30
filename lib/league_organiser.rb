@@ -1,3 +1,5 @@
+require_relative './match'
+
 class LeagueOrganiser
 
   def initialize(players)
@@ -8,15 +10,15 @@ class LeagueOrganiser
   end
 
   def show_matches
-    matches_strings = @matches.map.with_index do | players, index |
-      player_1, player_2 = players
+    matches_strings = @matches.map.with_index do | match, index |
+      player_1, player_2 = match.players
       string = "Match #{index + 1}: #{player_1} vs #{player_2}"
       if @match_winners.include?(index + 1)
         string += ", #{@match_winners[index + 1]} wins"
       end
       string
     end
-    puts matches_strings.join("\n")
+    p matches_strings.join(", ")
   end
 
   def record_a_win(match_id, winner)
@@ -33,7 +35,8 @@ class LeagueOrganiser
   private
 
   def generate_matches(players)
-    players.combination(2).to_a
+    player_list = players.combination(2).to_a
+    player_list.map{ |players| Match.new(players) }
   end
 
   # buggy if more than one player has the same number of points
